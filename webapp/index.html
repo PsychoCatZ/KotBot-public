@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kater</title>
+<meta name="theme-color" content="#0b0f14">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="stylesheet" href="/style.css">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+<div id="login-screen" class="screen">
+  <form id="login-form" class="login-box">
+    <h1>Kater</h1>
+    <p class="hint">Ordnung muss sein. Пароль?</p>
+    <input id="login-password" type="password" autocomplete="current-password" placeholder="Пароль" required>
+    <button type="submit">Войти</button>
+    <p id="login-error" class="error"></p>
+  </form>
+</div>
+
+<div id="chat-screen" class="screen hidden">
+  <header class="chat-header">
+    <span class="title">Kater</span>
+    <div class="header-actions">
+      <button id="home-screen-btn" class="icon-btn hidden" title="Добавить ярлык на главный экран">🏠</button>
+      <button id="theme-toggle" class="icon-btn" title="Переключить тему">🌙</button>
+      <button id="clear-btn" class="icon-btn" title="Очистить память">🗑</button>
+    </div>
+  </header>
+
+  <div id="messages" class="messages"></div>
+
+  <form id="chat-form" class="chat-form">
+    <label class="image-btn" title="Прикрепить фото">
+      📷
+      <input id="image-input" type="file" accept="image/*" hidden>
+    </label>
+    <div id="image-preview-wrap" class="image-preview-wrap hidden">
+      <img id="image-preview" alt="превью">
+      <button type="button" id="image-remove" class="image-remove">✕</button>
+    </div>
+    <textarea id="text-input" placeholder="Сообщение Kater..." rows="1"></textarea>
+    <button type="submit" id="send-btn" class="send-btn">➤</button>
+  </form>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
