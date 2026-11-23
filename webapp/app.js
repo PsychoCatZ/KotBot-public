@@ -11,6 +11,33 @@
   const chatForm = document.getElementById("chat-form");
   const textInput = document.getElementById("text-input");
   const sendBtn = document.getElementById("send-btn");
+  for (const button of document.querySelectorAll("[data-memory]")) {
+    button.addEventListener("click", () => {
+      const command = button.dataset.memory;
+      const draft = textInput.value;
+      if (draft.trim() && !window.confirm("Заменить текущий черновик?")) return;
+      textInput.value = command + (command.endsWith(":") ? " " : "");
+      button.closest("details").open = false;
+      textInput.focus();
+      textInput.dispatchEvent(new Event("input"));
+    });
+  }
+  const initiativeStatus = document.getElementById("initiative-status");
+  const initiativeButtons = [...document.querySelectorAll("[data-initiative]")];
+  for (const button of initiativeButtons) {
+    button.addEventListener("click", async () => {
+      initiativeButtons.forEach(item => { item.disabled = true; });
+      try {
+        const response = await fetch("/api/initiative/" + button.dataset.initiative, { method: "POST" });
+        if (!response.ok) throw new Error("Initiative update failed");
+        initiativeStatus.textContent = (await response.json()).message;
+      } catch {
+        initiativeStatus.textContent = "Не удалось изменить настройку.";
+      } finally {
+        initiativeButtons.forEach(item => { item.disabled = false; });
+      }
+    });
+  }
   const clearBtn = document.getElementById("clear-btn");
   const imageInput = document.getElementById("image-input");
   const imagePreviewWrap = document.getElementById("image-preview-wrap");

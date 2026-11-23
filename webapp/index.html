@@ -27,8 +27,22 @@
   <header class="chat-header">
     <span class="title">Kater</span>
     <div class="header-actions">
+      <a href="/apartment.html">Квартира</a>
+      <details>
+        <summary>Инициатива</summary>
+        <button type="button" data-initiative="on">Включить</button>
+        <button type="button" data-initiative="off">Выключить</button>
+        <button type="button" data-initiative="status">Проверить статус</button>
+        <span id="initiative-status" role="status"></span>
+      </details>
       <button id="home-screen-btn" class="icon-btn hidden" title="Добавить ярлык на главный экран">🏠</button>
       <button id="theme-toggle" class="icon-btn" title="Переключить тему">🌙</button>
+      <details>
+        <summary>Память</summary>
+        <button type="button" data-memory="Запомни:">Запомни</button>
+        <button type="button" data-memory="Забудь:">Забудь</button>
+        <button type="button" data-memory="Что ты помнишь?">Что ты помнишь?</button>
+      </details>
       <button id="clear-btn" class="icon-btn" title="Очистить память">🗑</button>
     </div>
   </header>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Квартира Катера</title>
+<link rel="stylesheet" href="/style.css">
+<script defer src="/apartment.js?v=scroll-2"></script>
+<style>
+.apartment {
+  width: min(100%, 48rem);
+  height: 100dvh;
+  margin: auto;
+  padding: .75rem 1rem;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: .75rem;
+}
+.apartment h1 { margin: .35rem 0; }
+.apartment [role="status"] { margin: .5rem 0; }
+.room-controls { display: flex; flex-wrap: wrap; gap: .35rem; }
+.room-log {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: .65rem;
+  border: 1px solid currentColor;
+  border-radius: .5rem;
+  overflow-wrap: anywhere;
+}
+#intervene { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+#intervene input { flex: 1 1 10rem; min-width: 0; }
+</style>
+</head>
+<body>
+<main class="apartment">
+<header>
+<a href="/">← К чату</a>
+<h1>Квартира Катера</h1>
+<a href="/ilse.html">Поговорить с Ильзой</a>
+<p id="status" role="status"></p>
+<div class="room-controls">
+<button id="automation" disabled>Пауза автоматики</button>
+<button id="room">Дать поговорить</button>
+<button id="next">Следующая реплика</button>
+<button id="stop">Остановить</button>
+</div>
+</header>
+<section id="room-log" class="room-log" tabindex="0" aria-label="Журнал квартиры">
+<details id="archive" hidden><summary>Знакомство</summary><div id="past"></div></details>
+<details id="box-archive" hidden><summary>Коробка на двоих</summary><div id="box-past"></div></details>
+<details id="broken-archive" hidden><summary>Коробка без дна</summary><div id="broken-past"></div></details>
+<details id="repair-archive" hidden><summary>Скотч и следы</summary><div id="repair-past"></div></details>
+<div id="dialogue" aria-live="polite"></div>
+</section>
+<form id="intervene">
+<label for="message">Твоя реплика</label>
+<input id="message" required maxlength="500">
+<button id="send">Вмешаться</button>
+</form>
+</main>
+</body>
+</html>

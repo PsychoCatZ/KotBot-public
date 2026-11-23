@@ -8,8 +8,6 @@ sys.path.insert(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
 
-# Supply configuration through process environment before starting the API.
-
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -17,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 import auth
 import db
 import telegram_client
-from openai_client import ask_kater
+from starlette.concurrency import run_in_threadpool
 from telegram_auth import verify_init_data
 
 OWNER_TELEGRAM_ID = int(os.environ["OWNER_TELEGRAM_ID"])
@@ -139,18 +137,13 @@ async def chat(
         f"[Отправитель: Создатель]\n{text or '[фото без подписи]'}"
     )
 
-    history = db.load_history(CHAT_ID)
-
     try:
-        answer = ask_kater(history, tagged_text, image_data_url=image_data_url)
+        answer = await run_in_threadpool(db.service.respond, CHAT_ID, tagged_text, image_data_url=image_data_url)
     except Exception as e:
         raise HTTPException(
             status_code=502,
             detail=f"OpenAI опять занимается хуйнёй: {e}"
         )
-
-    db.save_message(CHAT_ID, "user", tagged_text, image_data_url=image_data_url)
-    db.save_message(CHAT_ID, "assistant", answer)
 
     # Эхо в Telegram: бот не может притвориться, что сообщение написал сам
     # владелец, поэтому пересылает его от своего имени с пометкой источника,
@@ -167,5 +160,18 @@ async def chat(
 
     return {"answer": answer}
 
+
+@app.post("/api/initiative/{mode}")
+def set_initiative(mode: str, request: Request):
+    require_session(request)
+    if mode not in {"on", "off", "status"}:
+        raise HTTPException(status_code=400, detail="Неизвестный режим")
+    command = {"on": "Инициативу включить", "off": "Инициативу выключить", "status": "Статус инициативы"}[mode]
+    return {"message": db.service.respond(CHAT_ID, command)}
+
+
+from apartment import router as apartment_router
+
+app.include_router(apartment_router(require_session, db.service))
 
 app.mount("/", StaticFiles(directory=WEBAPP_DIR, html=True), name="webapp")
